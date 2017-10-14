@@ -260,6 +260,46 @@ void drawShapeFrame(
 //
 // }
 
+void drawOpenCylinderConnectingTwoSpheres(
+                                          dart::gui::RenderInterface* ri,
+                                          const std::pair<double, Eigen::Vector3d>& sphere0,
+                                          const std::pair<double, Eigen::Vector3d>& sphere1,
+                                          int slices, int stacks)
+{
+    const auto& r0 = sphere0.first;
+    const auto& r1 = sphere1.first;
+    const Eigen::Vector3d& p0 = sphere0.second;
+    const Eigen::Vector3d& p1 = sphere1.second;
+    
+    const auto dist = (p0 - p1).norm();
+    
+    if (dist < std::numeric_limits<double>::epsilon())
+    return;
+    
+    const Eigen::Vector3d zAxis = (p1 - p0).normalized();
+    
+    const auto r0r1 = r0 - r1;
+    const auto theta = std::acos(r0r1/dist);
+    const auto baseRadius = r0*std::sin(theta);
+    const auto topRadius = r1*std::sin(theta);
+    const Eigen::Vector3d baseCenter = p0 + r0*std::cos(theta)*zAxis;
+    const Eigen::Vector3d topCenter = p1 + r1*std::cos(theta)*zAxis;
+    const Eigen::Vector3d center = 0.5*(baseCenter + topCenter);
+    const auto height = (topCenter - baseCenter).norm();
+    const Eigen::AngleAxisd aa(Eigen::Quaterniond().setFromTwoVectors(
+                                                                      Eigen::Vector3d::UnitZ(), zAxis));
+    
+    glPushMatrix();
+    {
+        glTranslated(center.x(), center.y(), center.z());
+        glRotated(dart::math::toDegree(aa.angle()),
+                  aa.axis().x(), aa.axis().y(), aa.axis().z());
+        
+        ri->drawOpenCylinder(baseRadius, topRadius, height, slices, stacks);
+    }
+    glPopMatrix();
+}
+
 void drawShape(
     dart::gui::RenderInterface* ri,
     const dart::dynamics::Shape* shape,
@@ -322,14 +362,34 @@ void drawShape(
         {
           const auto* multiSphere = static_cast<const MultiSphereShape*>(shape);
           const auto& spheres = multiSphere->getSpheres();
-          for (const auto& sphere : spheres)
-          {
-            glTranslated(sphere.second.x(), sphere.second.y(), sphere.second.z());
-            ri->drawSphere(sphere.first);
-            glTranslated(-sphere.second.x(), -sphere.second.y(), -sphere.second.z());
-          }
-          // TODO(JS): This is an workaround that draws only spheres rather than the
-          // actual convex hull.
+            // Draw spheres
+            for (const auto& sphere : spheres)
+            {
+                glPushMatrix();
+                {
+                    glTranslated(sphere.second.x(), sphere.second.y(), sphere.second.z());
+                    ri->drawSphere(sphere.first);
+                }
+                glPopMatrix();
+            }
+            
+            if (spheres.size() < 2u)
+            return;
+            
+            // Draw all the possible open cylinders that connects a pair of spheres in the
+            // list.
+            //
+            // TODO(JS): This is a workaround. The correct solution would be drawing the
+            // convex hull for the spheres, but we don't have a function computing convex
+            // hull yet.
+            for (auto i = 0u; i < spheres.size() - 1u; ++i)
+            {
+                for (auto j = i + 1u; j < spheres.size(); ++j)
+                {
+                    drawOpenCylinderConnectingTwoSpheres(
+                                                         ri, spheres[i], spheres[j], 16, 16);
+                }
+            }
         }
         else if (shape->is<MeshShape>())
         {
