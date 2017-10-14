@@ -54,6 +54,7 @@ void BODY(getCOMLinearVelocity)(int wid, int skid, int bid, double outv3[3]);
 void BODY(getCOMSpatialVelocity)(int wid, int skid, int bid, double outv6[6]);
 void BODY(getCOMLinearAcceleration)(int wid, int skid, int bid, double outv3[3]);
 void BODY(getCOMSpatialAcceleration)(int wid, int skid, int bid, double outv6[6]);
+void BODY(setLocalCOM)(int wid, int skid, int bid, double inv3[3]);
 
 ////////////////////////////////////////
 // BodyNode::Friction and Restitution Functions

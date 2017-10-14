@@ -13,6 +13,7 @@ using std::endl;
 #include "pydart2_world_api.h"
 #include "pydart2_skeleton_api.h"
 #include "pydart2_bodynode_api.h"
+#include "pydart2_joint_api.h"
 #include "pydart2_api.h"
 
 
@@ -159,3 +160,32 @@ int addBallJointConstraint(int wid, int skid1, int bid1, int skid2, int bid2,
     world->getConstraintSolver()->addConstraint(cl);
     return 0;
 }
+
+int addHumanArmJointLimitConstraint(int wid, int skid1, int jid1, int jid2,
+                                    bool is_mirror) {
+    dart::simulation::WorldPtr world = GET_WORLD(wid);
+    dart::dynamics::JointPtr jt1 = GET_JOINT(wid, skid1, jid1);
+    dart::dynamics::JointPtr jt2 = GET_JOINT(wid, skid1, jid2);
+    
+    dart::constraint::HumanArmJointLimitConstraintPtr cl =
+    std::make_shared<dart::constraint::HumanArmJointLimitConstraint>(jt1, jt2, is_mirror);
+    world->getConstraintSolver()->addConstraint(cl);
+    return 0;
+}
+
+int addHumanLegJointLimitConstraint(int wid, int skid1, int jid1, int jid2, int jid3,
+                                    bool is_mirror) {
+    dart::simulation::WorldPtr world = GET_WORLD(wid);
+    dart::dynamics::JointPtr jt1 = GET_JOINT(wid, skid1, jid1);
+    dart::dynamics::JointPtr jt2 = GET_JOINT(wid, skid1, jid2);
+    dart::dynamics::JointPtr jt3 = GET_JOINT(wid, skid1, jid3);
+    
+    dart::constraint::HumanLegJointLimitConstraintPtr cl =
+    std::make_shared<dart::constraint::HumanLegJointLimitConstraint>(jt1, jt2, jt3, is_mirror);
+    world->getConstraintSolver()->addConstraint(cl);
+    return 0;
+}
+
+
+
+
