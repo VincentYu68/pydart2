@@ -30,11 +30,14 @@ PYDART2_ODE_FOUND = \
 print("PYDART2_ODE_FOUND = %s" % PYDART2_ODE_FOUND)
 print("------------------------")
 
-CXX_FLAGS = '-Wall -msse2 -fPIC -stdlib=libc++ -std=c++14 -Xlinker -rpath /usr/local/lib '
+CXX_FLAGS = '-Wall -msse2 -fPIC -std=c++14 -Xlinker -rpath /usr/local/lib '
 CXX_FLAGS += '-O3 -DNDEBUG -shared '
 CXX_FLAGS += '-g -fno-omit-frame-pointer -fno-inline-functions '
 CXX_FLAGS += '-fno-optimize-sibling-calls '
 
+USE_HUMAN_JOINT_LIMIT = False
+if USE_HUMAN_JOINT_LIMIT:
+    CXX_FLAGS += " -DUSE_HUMAN_JOINT_LIMIT"
 
 if PYDART2_BULLET_FOUND:
     CXX_FLAGS += " -DPYDART2_BULLET_FOUND"
@@ -88,13 +91,14 @@ include_dirs += NP_DIRS
 libraries = list()
 libraries += ['dart', 'dart-gui']
 libraries += ['dart-optimizer-nlopt',
-              'dart-planning', 'dart-utils', 'dart-utils-urdf', ]
+               'dart-utils', 'dart-utils-urdf', ]
 
 # libraries += [current_python]
 if _platform == "linux" or _platform == "linux2":
     libraries += ['GL', 'glut', 'Xmu', 'Xi']
     CXX_FLAGS += '-fno-inline-functions-called-once'
 elif _platform == "darwin":
+    CXX_FLAGS += '  -stdlib=libc++ '
     CXX_FLAGS += ' -framework Cocoa '
     CXX_FLAGS += '-framework OpenGL '
     CXX_FLAGS += '-framework GLUT '

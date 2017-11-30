@@ -161,6 +161,7 @@ int addBallJointConstraint(int wid, int skid1, int bid1, int skid2, int bid2,
     return 0;
 }
 
+#ifdef USE_HUMAN_JOINT_LIMIT
 int addHumanArmJointLimitConstraint(int wid, int skid1, int jid1, int jid2,
                                     bool is_mirror) {
     dart::simulation::WorldPtr world = GET_WORLD(wid);
@@ -186,6 +187,6 @@ int addHumanLegJointLimitConstraint(int wid, int skid1, int jid1, int jid2, int 
     return 0;
 }
 
-
+#endif
 
 
