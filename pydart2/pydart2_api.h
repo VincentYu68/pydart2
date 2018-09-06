@@ -47,12 +47,10 @@ void COLLISION_RESULT(renderContact)(double inv6[6], double size, double scale);
 int addBallJointConstraint(int wid, int skid1, int bid1, int skid2, int bid2,
                            double inv3[3]);
 
-#ifdef USE_HUMAN_JOINT_LIMIT
 int addHumanArmJointLimitConstraint(int wid, int skid1, int jid1, int jid2,
                                     bool is_mirror);
 
 int addHumanLegJointLimitConstraint(int wid, int skid1, int jid1, int jid2, int jid3,
                                     bool is_mirror);
-#endif
 
 #endif // #ifndef PYDART2_PYDART2_API_H

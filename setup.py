@@ -35,7 +35,7 @@ CXX_FLAGS += '-O3 -DNDEBUG -shared '
 CXX_FLAGS += '-g -fno-omit-frame-pointer -fno-inline-functions '
 CXX_FLAGS += '-fno-optimize-sibling-calls '
 
-USE_HUMAN_JOINT_LIMIT = False
+USE_HUMAN_JOINT_LIMIT = True
 if USE_HUMAN_JOINT_LIMIT:
     CXX_FLAGS += " -DUSE_HUMAN_JOINT_LIMIT"
 

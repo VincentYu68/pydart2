@@ -29,7 +29,7 @@ class HumanArmJointLimitConstraint(object):
         self.mirror = mirror
         
     def add_to_world(self, world):
-        if hasattr(papi, addHumanArmJointLimitConstraint):
+        if hasattr(papi, 'addHumanArmJointLimitConstraint'):
             papi.addHumanArmJointLimitConstraint(world.id,
                                              self.shldJoint.skid,
                                              self.shldJoint.id,
@@ -44,7 +44,7 @@ class HumanLegJointLimitConstraint(object):
         self.mirror = mirror
     
     def add_to_world(self, world):
-        if hasattr(papi, addHumanLegJointLimitConstraint):
+        if hasattr(papi, 'addHumanLegJointLimitConstraint'):
             papi.addHumanLegJointLimitConstraint(world.id,
                                              self.thighJoint.skid,
                                              self.thighJoint.id,

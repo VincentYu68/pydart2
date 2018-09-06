@@ -134,4 +134,4 @@ if __name__ == '__main__':
     print("'1'--'2': programmed interaction")
     print("    '1': push forward")
     print("    '2': push backward")
-    pydart.gui.viewer.launch_pyqt5(world)
+    pydart.gui.viewer.launch_glut(world)
